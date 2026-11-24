@@ -1,0 +1,143 @@
+import json
+
+S = lambda: [  # standard ski-school lesson menu (example prices)
+    {"id": "ps", "label": "Private ski lesson", "unit": "h", "rate": 95},
+    {"id": "pk", "label": "Private kids lesson", "unit": "h", "rate": 95},
+    {"id": "sb", "label": "Private snowboard lesson", "unit": "h", "rate": 95},
+    {"id": "fd", "label": "Full day private (up to 6 h)", "unit": "day", "rate": 520},
+]
+G = lambda: [  # mountain-guide menu
+    {"id": "op", "label": "Off-piste / freeride day", "unit": "day", "rate": 650},
+    {"id": "sk", "label": "Ski touring day", "unit": "day", "rate": 650},
+    {"id": "hr", "label": "Half-day guided skiing", "unit": "half", "rate": 380},
+]
+
+ZRM = ["Sunnegga – Rothorn", "Gornergrat – Stockhorn", "Matterhorn Glacier Paradise", "Cervinia (Italy)"]
+ZCOMP = [["Alpine Ski School Zermatt", 5.0, 1039], ["Evolution Ski School", 5.0, 688], ["Family Skiing Zermatt", 5.0, 321], ["My Ski School Zermatt", 4.9, 153], ["Matterhorn Diamonds", 4.9, 67]]
+ZGCOMP = [["ZERMATTERS", 4.7, 518], ["Zermatt Mountain Guide", 5.0, 5], ["Mountain Sports Zermatt", 5.0, 4]]
+STM = ["Corviglia", "Corvatsch", "Diavolezza"]
+STCOMP = [["Sports Paradise", 5.0, 159], ["PassionSki", 5.0, 81], ["BENG Ski School", 5.0, 80], ["Suvretta Sports", 4.8, 74], ["Swiss Ski School St. Moritz", 4.3, 69]]
+VCOMP = [["Ecole Suisse de ski Verbier", 4.6, 262], ["Altitude Verbier", 5.0, 163], ["Adrenaline Verbier", 4.9, 133], ["Supreme Ski School", 5.0, 68], ["Verbier Ski School – European Snowsport", 4.9, 52]]
+SFCOMP = [["Swiss Ski School Saas-Fee", 4.9, 364], ["Ski Zenit", 4.9, 178], ["The Ski Academy", 5.0, 30]]
+CMCOMP = [["Enjoy The Ride", 5.0, 114], ["School Swiss Ski Crans-Montana", 3.9, 73], ["Swiss Mountain Sports", 4.3, 54], ["Alpine Ski School Crans-Montana", 5.0, 21]]
+ANCOMP = [["Eco Ski School Andermatt", 5.0, 346], ["Schweizer Schneesportschule Andermatt", 5.0, 94], ["Alpine Sports Andermatt", 4.7, 50], ["Altitude Andermatt", 5.0, 28]]
+WECOMP = [["Swiss Ski School Wengen", 4.9, 55], ["Ski Privat", 5.0, 7], ["Bernhard Fuchs", 5.0, 3]]
+GRCOMP = [["OUTDOOR Grindelwald", 4.8, 355], ["Altitude Grindelwald", 5.0, 110], ["Skischule Kleine Scheidegg", 5.0, 2]]
+
+D = [
+ dict(slug="matterhorn-diamonds", name="Matterhorn Diamonds Ski School", resort="Zermatt", pid="ChIJ6dsHAtw1j0cR87_KEYymdEc", r=4.9, n=67,
+      lessons=S(), places=ZRM, team=["Rowena", "Juan", "Isabella", "Lucas"], comp=ZCOMP, me="Matterhorn Diamonds",
+      head="Turn every family who comes back into a booking before Christmas.",
+      cards=[["67 vs 1,039", "Same quality, fewer reviews", "Families rave about you, but Alpine Ski School Zermatt has 15× the reviews, so Google and ChatGPT name them first. A review request after each lesson closes that gap."],
+             ["Every year", "Your guests come back", "Reviews mention families returning season after season. A 'same instructor again?' message in October fills January before anyone searches."],
+             ["Short notice", "You arrange it fast", "Guests praise last-minute arrangements. Live availability lets them book themselves at 22:00 without a call."]]),
+ dict(slug="my-ski-school-zermatt", name="My Ski School Zermatt", resort="Zermatt", pid="ChIJZQSixdg1j0cR2098oGMBB1E", r=4.9, n=153,
+      lessons=S() + [{"id": "cv", "label": "Guided day Zermatt–Cervinia", "unit": "day", "rate": 560}], places=ZRM, team=["Petr", "Karla", "Davis"], comp=ZCOMP, me="My Ski School Zermatt",
+      head="Answer every booking enquiry instantly, even while Petr is on the slope.",
+      cards=[["3 resorts", "Zermatt, Cervinia, St. Moritz", "Few schools guide across borders and resorts. Pages for 'ski guide Zermatt to Cervinia' get you named when travellers ask ChatGPT."],
+             ["May", "Spring skiing", "Guests booked you in May when most schools are closed. That's a search nobody else answers."],
+             ["Auto-reply", "Turn it into a booking", "Your WhatsApp auto-reply asks guests to type six details. A booking flow collects them in one tap and confirms instantly."]]),
+ dict(slug="family-skiing-zermatt", name="Family Skiing Zermatt", resort="Zermatt", pid="ChIJZ_VZfu83j0cRmSC9wSHYkpA", r=5.0, n=321,
+      lessons=S(), places=ZRM, team=["Lucy", "Petr", "Lucia"], comp=ZCOMP, me="Family Skiing Zermatt",
+      head="Keep the WhatsApp feel guests love, without answering every message by hand.",
+      cards=[["5.0 · 321", "Third-most reviewed in Zermatt", "Parents trust you. Alpine and Evolution have more reviews, so a post-lesson review request is your cheapest growth."],
+             ["WhatsApp", "Guests already book this way", "Reviews say how easy you are to reach on WhatsApp. An assistant answers prices and free instructors instantly, then hands over to you."],
+             ["Midnight", "When enquiries arrive", "Right now a midnight enquiry gets 'go to the website'. The pipeline books it while you sleep."]]),
+ dict(slug="zermatt-mountain-guide", name="Zermatt Mountain Guide", resort="Zermatt", pid="ChIJx7LpRSI3j0cRC-6OdkXt7Dk", r=5.0, n=5,
+      lessons=G(), places=ZRM, team=["André"], comp=ZGCOMP, me="Zermatt Mountain Guide",
+      head="A premium guide deserves a premium booking page.",
+      cards=[["5 reviews", "All of them 5 stars", "Guests call André knowledgeable and safety-minded. With 5 reviews, ZERMATTERS (518) is who people find first."],
+             ["Off-piste", "Your strongest story", "Most reviews are about off-piste days. A page for 'off-piste guide Zermatt' targets exactly those guests."],
+             ["1 tap", "Review after each tour", "A WhatsApp message after each tour turns happy guests into reviews automatically."]]),
+ dict(slug="mountain-sports-zermatt", name="Mountain Sports Zermatt", resort="Zermatt", pid="ChIJSyzlj9g1j0cRDELuqd9xau4", r=5.0, n=4,
+      lessons=G() + [{"id": "4k", "label": "First 4000 m peak (summer)", "unit": "day", "rate": 750}], places=ZRM, team=["Reinhard"], comp=ZGCOMP, me="Mountain Sports Zermatt",
+      head="Fill winter and summer from one booking page.",
+      cards=[["4000 m", "Your guests' highlight", "Reviews describe first 4000ers like the Alphubel. Climbers plan these months ahead, so one page per peak gets found."],
+             ["4 reviews", "All glowing", "Great feedback but few reviews. A review request after each tour builds the proof that sells summer."],
+             ["2 seasons", "One pipeline", "Ski touring in winter, peaks in summer: the same booking flow handles both."]]),
+ dict(slug="beng-ski-school", name="BENG Ski School", resort="St. Moritz", pid="ChIJicFGJ39voowRWdlS54dKAhI", r=5.0, n=80,
+      lessons=S(), places=STM, team=["Alexandra", "Roberto"], comp=STCOMP, me="BENG Ski School",
+      head="Bring last season's families back before they start searching.",
+      cards=[["Year 2, 3, 4", "Families return", "Parents write about years of lessons with BENG. A 'book again' message in October fills the calendar early."],
+             ["Kids", "Your core guests", "A page for 'kids ski school St. Moritz' gets you named when parents ask ChatGPT."],
+             ["80 vs 159", "Reviews vs Sports Paradise", "Same 5.0 rating, half the reviews. A review request after each lesson closes it."]]),
+ dict(slug="sports-paradise-st-moritz", name="Ski School St. Moritz | Sports Paradise", resort="St. Moritz", pid="ChIJKzaWPjt9g0cRTsMt5fonHkM", r=5.0, n=159,
+      lessons=S(), places=STM, team=["Alessio", "Katja", "Luca", "Sara", "Alessandro"], comp=STCOMP, me="Sports Paradise",
+      head="Let returning guests book the same instructor in seconds.",
+      cards=[["#1", "Most-reviewed in St. Moritz", "5.0 from 159 reviews puts you ahead of every school we checked. The pipeline protects that lead."],
+             ["By name", "Guests ask for instructors", "Reviews name Alessio, Katja, Luca and Sara again and again. Instructor profiles + 'request your instructor' turn that into rebookings."],
+             ["22:00", "Open late", "You answer until late, but a booking flow answers instantly at any hour."]]),
+ dict(slug="verbier-european-snowsport", name="Verbier Ski School – European Snowsport", resort="Verbier", pid="ChIJwYRu2jLOjkcRpo0925M67SI", r=4.9, n=52,
+      lessons=S(), places=["Médran", "Savoleyres", "La Chaux"], team=["Benson", "Emma", "Stuart"], comp=VCOMP, me="Verbier Ski School – European Snowsport",
+      head="Your teaching gets 4.9 stars. Let's make sure guests find you first.",
+      cards=[["52 vs 262", "Reviews vs the Swiss school", "Behind Altitude (163) and the Swiss Ski School (262) despite a 4.9 rating. Review requests after each lesson change that this season."],
+             ["English", "Your edge", "Guests praise English-speaking instructors. A page for 'English-speaking ski school Verbier' targets exactly them."],
+             ["Nervous skiers", "Your reviews' theme", "Guests mention feeling safe and confident. That story sells to first-timers."]]),
+ dict(slug="snow-coach-laax", name="Snow Coach – Ski & Snowboard School", resort="Flims · Laax · Falera", pid="ChIJlR2yK5LDhEcReRHC-1qf0tI", r=5.0, n=109,
+      lessons=S() + [{"id": "xc", "label": "Private cross-country lesson", "unit": "h", "rate": 95}], places=["Flims", "Laax", "Falera"], team=["Ralf"], comp=[], me="Snow Coach",
+      head="Ski, snowboard and cross-country, booked in one flow, without Isabel typing every reply.",
+      cards=[["3 sports", "One instructor", "Guests book Ralf for skiing, snowboarding and cross-country. Few schools in Laax cover all three."],
+             ["5.0 · 109", "Perfect rating", "Every review is five stars. Pages per sport turn that into searches won."],
+             ["Isabel", "Your booking desk", "Reviewers praise how smooth the booking is. The assistant handles routine questions so Isabel handles the rest."]]),
+ dict(slug="ski-zenit-saas-fee", name="Ski Zenit – Ski & Snowboard School", resort="Saas-Fee", pid="ChIJ1WP4t-NFj0cRn3Md1nPnWEA", r=4.9, n=178,
+      lessons=S() + [{"id": "gl", "label": "Glacier day (early season)", "unit": "day", "rate": 520}], places=["Alpin Express", "Felskinn", "Allalin glacier"], team=["Max", "Johannes", "Analia", "Rich"], comp=SFCOMP, me="Ski Zenit",
+      head="Your guests keep adding a second day. Make it one tap.",
+      cards=[["Day 2", "Guests rebook the same instructor", "Reviews show guests extending with Max, Johannes or Analia. 'Book again with your instructor' turns that into a button."],
+             ["Glacier", "Saas-Fee's November edge", "Early-season glacier skiing is what travellers search for now. A page for it gets you named."],
+             ["178 vs 364", "Reviews vs the Swiss school", "Close the gap with a review request after each lesson."]]),
+ dict(slug="ski-academy-saas-fee", name="The Ski Academy – Saas-Fee", resort="Saas-Fee", pid="ChIJvdIPTQZFj0cRjWNeHHh0-Aw", r=5.0, n=30,
+      lessons=[{"id": "b12", "label": "BASI Level 1 & 2 gap course", "unit": "course", "rate": 0}, {"id": "b3", "label": "BASI Level 3 / ISIA training", "unit": "course", "rate": 0}, {"id": "ps", "label": "Private technique coaching", "unit": "h", "rate": 110}],
+      places=["Saas-Fee"], team=["Loz"], comp=SFCOMP, me="The Ski Academy", academy=True,
+      head="Turn your trainees' success stories into next season's applications.",
+      cards=[["L1 → ISIA", "Careers launched", "Reviews follow trainees from BASI Level 1 to ISIA. That journey is your best sales page."],
+             ["Months ahead", "When gap-year students decide", "Students and parents research courses months before the season on Google and ChatGPT."],
+             ["Apply", "Not 'book'", "Your pipeline is applications: enquiry → call → deposit → course pack. This demo shows it."]]),
+ dict(slug="enjoy-the-ride-crans-montana", name="Enjoy The Ride Ski & Snowboard School", resort="Crans-Montana", pid="ChIJwah2JUTv4YURsR0BN6vRq0Q", r=5.0, n=114,
+      lessons=S(), places=["Crans – Cry d'Er", "Montana – Arnouva", "Aminona"], team=["Marion", "Joules", "Antoine"], comp=CMCOMP, me="Enjoy The Ride",
+      head="Parents love you. Give them a daily update and a one-tap rebooking.",
+      cards=[["5.0 vs 3.9", "You vs the Swiss school", "You're the top-rated school in Crans-Montana by a wide margin. Make sure ChatGPT knows it."],
+             ["Kids", "Your superpower", "Five beginner kids skiing a long slope in four days. A 'progress update' WhatsApp after each lesson delights parents."],
+             ["Flexible", "Your reputation", "Reviews praise flexibility. Live availability lets families pick slots themselves."]]),
+ dict(slug="alpine-ski-school-crans-montana", name="Alpine Ski School Crans-Montana", resort="Crans-Montana", pid="ChIJzQiL7qDhjkcRir0x18KSE1Q", r=5.0, n=21,
+      lessons=S(), places=["Crans – Cry d'Er", "Montana – Arnouva", "Aminona"], team=["Tonio", "Jean Marc", "Mireille"], comp=CMCOMP, me="Alpine Ski School Crans-Montana",
+      head="Guests book you the evening before. Let them do it themselves.",
+      cards=[["Evening before", "Spontaneous bookings", "A guest booked the night before and you found a time. A 'book for tomorrow' page does that 24/7."],
+             ["21 vs 114", "Reviews vs Enjoy The Ride", "Same 5.0 rating, a fifth of the reviews. A review request after each lesson closes it."],
+             ["Comeback", "Your reviews' theme", "Guests returning after years away praise your patience. That's a page worth writing."]]),
+ dict(slug="eco-ski-school-andermatt", name="Eco Ski School Andermatt", resort="Andermatt", pid="ChIJ3SfMG8RxhUcRf-8bHc5KbOo", r=5.0, n=346,
+      lessons=S(), places=["Gütsch", "Nätschen", "Sedrun"], team=["Andreas", "Matias"], comp=ANCOMP, me="Eco Ski School Andermatt",
+      head="You lead Andermatt. Make last-minute bookings effortless.",
+      cards=[["#1", "In Andermatt", "5.0 from 346 reviews, more than every other school we checked. The pipeline protects the lead as Andermatt grows."],
+             ["Last minute", "How guests find you", "Reviews mention last-minute lessons. Instant availability and deposit means no lost late enquiries."],
+             ["Again", "Repeat private lessons", "Guests book Andreas or Matias a second time. 'Book again' makes it one tap."]]),
+ dict(slug="alpine-sports-andermatt", name="Alpine Sports Andermatt", resort="Andermatt", pid="ChIJIfN26o1xhUcRA-0WhQEg5K8", r=4.7, n=50,
+      lessons=S(), places=["Gütsch", "Nätschen", "Sedrun"], team=["Peter", "Martin", "Sara", "Pol", "Danique"], comp=ANCOMP, me="Alpine Sports Andermatt",
+      head="Keep Peter's personal service, lose the email back-and-forth.",
+      cards=[["Email", "How bookings work now", "Guests praise how well Peter organises everything by email. The same care, in a 1-minute booking flow."],
+             ["50 vs 346", "Reviews vs Eco Ski School", "A review request after every lesson closes the gap in Andermatt."],
+             ["Spontaneous", "Guests book on the day", "Reviews mention hour-long lessons booked spontaneously. Live slots make that self-serve."]]),
+ dict(slug="ski-privat-wengen", name="Ski Privat", resort="Wengen", pid="ChIJ1ZUSIPChj0cRZHO2Hw-b_Ic", r=5.0, n=7,
+      lessons=S(), places=["Wengen village", "Kleine Scheidegg", "Männlichen"], team=["Pierre", "Aline"], comp=WECOMP, me="Ski Privat",
+      head="Let guests book Pierre or Aline directly.",
+      cards=[["2 → 7 years", "Loyal families", "One family's toddler learnt with Pierre and is still skiing with you five years later."],
+             ["7 reviews", "All 5 stars", "The Swiss Ski School Wengen has 55. A review request after each lesson catches up fast."],
+             ["Black runs", "Your results", "Guests arrive shaky on blues and leave on blacks. That's the story your page should tell."]]),
+ dict(slug="bernhard-fuchs-wengen", name="Bernhard Fuchs – Private Ski Instructor", resort="Wengen · Lauterbrunnen", pid="ChIJYRez-s-hj0cRFSmNG8TskTI", r=5.0, n=3,
+      lessons=S()[:3], places=["Wengen village", "Kleine Scheidegg", "Männlichen"], team=["Bernhard"], comp=WECOMP, me="Bernhard Fuchs",
+      head="A simple way for families to book Bernhard.",
+      cards=[["First-timers", "Your specialty", "A family brought kids who had never skied and saw real progress. Parents search for exactly that."],
+             ["3 reviews", "All 5 stars", "A review request after each lesson makes you visible next to the big schools."],
+             ["1 page", "All you need", "Lessons, availability, deposit and reminders, without a big website."]]),
+ dict(slug="skischule-kleine-scheidegg", name="Skischule Kleine Scheidegg", resort="Grindelwald · Kleine Scheidegg", pid="ChIJ3-pv6lWZj0cRWh3Z6QfErN8", r=5.0, n=2,
+      lessons=S() + [{"id": "rt", "label": "Add rental (boots & skis)", "unit": "addon", "rate": 45}], places=["Kleine Scheidegg", "Grindelwald Grund", "First"], team=["Yanich"], comp=GRCOMP, me="Skischule Kleine Scheidegg",
+      head="Lessons and rental, booked together in one minute.",
+      cards=[["2 vs 355", "Reviews vs OUTDOOR", "Two perfect reviews, but visitors rarely find you. Reviews and a booking page fix that."],
+             ["Boots", "Sorted on the spot", "A guest who forgot boots got sorted immediately. Rental as a one-click add-on makes that a sale."],
+             ["Scheidegg", "Your location", "Right at the top: guests can book on the morning they arrive."]]),
+]
+
+for d in D:
+    d.setdefault("academy", False)
+json.dump(D, open('scripts/data.json', 'w'), ensure_ascii=False)
+open('api/_data.js', 'w').write("module.exports = " + json.dumps({d['slug']: d for d in D}, ensure_ascii=False, separators=(',', ':')) + ";\n")
+print(len(D))

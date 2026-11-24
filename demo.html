@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Booking demo</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--snow:#f4f7f8;--card:#fff;--pine:#14302a;--ink:#1d2b28;--mute:#5d6e6a;--line:#d8e2e0;--red:#d7263d;--ice:#e3eff1;--ok:#1f7a4d;
+--display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;--body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;color-scheme:light}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--snow);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+a{color:var(--pine)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.ribbon{background:var(--pine);color:#e9f2ef;font-size:13px;padding:8px 0}
+.ribbon .wrap{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;color:var(--pine)}
+h1{font-size:clamp(30px,4.4vw,48px);font-weight:800;line-height:1.05}
+h2{font-size:26px;font-weight:800}h3{font-size:17px;font-weight:600}
+.lede{max-width:62ch;color:var(--mute);margin:12px 0 0}
+.tag{display:inline-flex;gap:6px;background:var(--ice);color:var(--pine);border-radius:999px;padding:3px 10px;font-size:13px;font-weight:600}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;padding:32px 0 20px}
+@media (max-width:860px){.hero{grid-template-columns:1fr}}
+.gallery{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;gap:8px;height:320px;border-radius:16px;overflow:hidden}
+.gallery div{background:linear-gradient(160deg,#cfe3ea,#8fb3c2 55%,#3e6475);background-size:cover;background-position:center}
+.gallery div:first-child{grid-row:1/3}
+.gallery .fallback{position:relative}
+.gallery .fallback svg{position:absolute;inset:auto 0 0 0;width:100%;height:60%}
+.credit{font-size:12px;color:var(--mute);margin-top:6px}
+.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:20px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.book{border-top:5px solid var(--red)}
+.steps{display:flex;gap:6px;margin:14px 0 18px;flex-wrap:wrap}
+.steps span{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--snow);color:var(--mute);border:1px solid var(--line)}
+.steps span.on{background:var(--pine);color:#fff;border-color:var(--pine)}
+label{display:block;font-size:13px;font-weight:600;color:var(--mute);margin:0 0 6px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+@media (max-width:480px){.row{grid-template-columns:1fr}}
+select,input{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+input[type=checkbox]{width:auto}
+select:focus,input:focus,button:focus-visible{outline:3px solid #f3b3bc;outline-offset:1px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{font:inherit;font-size:14px;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-variant-numeric:tabular-nums}
+.chip[aria-pressed="true"]{background:var(--pine);color:#fff;border-color:var(--pine)}
+.chip:disabled{opacity:.4;text-decoration:line-through;cursor:not-allowed}
+.sum{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;border-top:1px dashed var(--line);padding-top:14px;flex-wrap:wrap}
+.price{font-family:var(--display);font-size:30px;font-weight:800;color:var(--pine);font-variant-numeric:tabular-nums}
+.small{font-size:13px;color:var(--mute)}
+.btn{font:inherit;font-weight:600;border:0;border-radius:10px;padding:12px 18px;cursor:pointer;background:var(--red);color:#fff}
+.btn.ghost{background:#fff;color:var(--pine);border:1px solid var(--line)}
+.done{display:none}.done.show{display:block}
+.wa{background:#e7f6ec;border:1px solid #bfe3cb;border-radius:12px;padding:12px 14px;font-size:14px;margin-top:10px;white-space:pre-line}
+.wa b{display:block;font-size:12px;color:var(--ok);margin-bottom:4px}
+.pipe{display:grid;gap:8px;margin-top:12px}
+.stage{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--line)}
+.stage.live .dot{background:var(--red)}.stage.ok .dot{background:var(--ok)}
+.count{font-variant-numeric:tabular-nums;font-weight:600;color:var(--pine)}
+section{padding:34px 0}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mute)}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.me td{background:#fff4f5;font-weight:600}
+.bar{height:8px;border-radius:4px;background:var(--ice);min-width:60px}
+.bar i{display:block;height:100%;border-radius:4px;background:var(--pine)}
+tr.me .bar i{background:var(--red)}
+.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:860px){.cols3{grid-template-columns:1fr}}
+.insight .k{font-family:var(--display);font-size:28px;font-weight:800;color:var(--red)}
+footer{padding:28px 0 48px;color:var(--mute);font-size:14px}
+.err{padding:80px 20px;text-align:center}
+</style>
+</head>
+<body>
+<div id="app"><p class="err">Loading…</p></div>
+<script>
+(async function(){
+const app=document.getElementById('app');
+const slug=location.pathname.replace(/^\/+|\/+$/g,'').split('/')[0];
+let d;
+try{const r=await fetch('/api/demo?slug='+encodeURIComponent(slug));if(!r.ok)throw 0;d=await r.json();}
+catch(e){app.innerHTML='<p class="err">This demo link isn\'t valid.</p>';return;}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+document.title=d.name+' · Booking demo';
+const live=d.live||{};const rating=live.rating||d.r, count=live.count||d.n;
+const photos=(live.photos||[]).slice(0,3);
+const ridge='<svg viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0 200 L0 120 L60 70 L95 100 L150 30 L205 95 L240 70 L300 120 L340 90 L400 130 L400 200Z" fill="#f4f7f8" opacity=".92"/><path d="M150 30 L170 55 L160 52 L150 62 L138 50 L128 56Z" fill="#fff"/></svg>';
+const gallery=photos.length
+ ? photos.map(p=>'<div style="background-image:url(\''+esc(p.url)+'\')" role="img" aria-label="Photo of '+esc(d.name)+'"></div>').join('')+(photos.length<3?'<div class="fallback">'+ridge+'</div>'.repeat(3-photos.length):'')
+ : '<div class="fallback">'+ridge+'</div><div class="fallback">'+ridge+'</div><div class="fallback">'+ridge+'</div>';
+const credits=photos.length?'Photos: Google Maps · '+photos.flatMap(p=>p.by).map(a=>a.uri?'<a href="'+esc(a.uri)+'">'+esc(a.name)+'</a>':esc(a.name)).filter((v,i,s)=>s.indexOf(v)===i).join(', '):'';
+const unitTxt={h:'/hour',day:'/day',half:'/half day',course:'',addon:''};
+const lessons=d.lessons.filter(l=>l.unit!=='addon');const addon=d.lessons.find(l=>l.unit==='addon');
+const team=['No preference'].concat(d.team);
+const comp=d.comp.slice().sort((a,b)=>b[2]-a[2]);const maxN=Math.max(1,...comp.map(c=>c[2]));
+app.innerHTML=`
+<div class="ribbon"><div class="wrap"><span>Concept demo prepared by Codzo for ${esc(d.name)}. Not a live booking site.</span><span>Prices, meeting points and availability are examples</span></div></div>
+<header class="wrap hero">
+ <div>
+  <span class="tag">${esc(d.resort)} · Winter 2026/27</span>
+  <h1 style="margin-top:12px">${esc(d.head)}</h1>
+  <p class="lede">A direct booking pipeline for ${esc(d.name)}: guests pick a ${d.academy?'course':'lesson'}, a time and pay a deposit; WhatsApp confirmations, reminders and review requests go out automatically.</p>
+  <p class="small" style="margin-top:10px">Google rating today: <b>${Number(rating).toFixed(1)}</b> from <b>${count}</b> reviews</p>
+ </div>
+ <div><div class="gallery">${gallery}</div><div class="credit">${credits}</div></div>
+</header>
+<main class="wrap">
+<div class="grid">
+ <div class="card book">
+  <h2>${d.academy?'Apply for a course':'Book a private lesson'}</h2>
+  <div class="steps" aria-hidden="true"><span class="on" id="s1">1 ${d.academy?'Course':'Lesson'}</span><span id="s2">2 ${d.academy?'Dates':'Time'}</span><span id="s3">3 ${d.academy?'Deposit':'Deposit'}</span><span id="s4">4 Confirmed</span></div>
+  <div id="form">
+   <div class="row">
+    <div><label for="lesson">${d.academy?'Course':'Lesson'}</label><select id="lesson">${lessons.map((l,i)=>'<option value="'+i+'">'+esc(l.label)+(l.rate?' · CHF '+l.rate+unitTxt[l.unit]:'')+'</option>').join('')}</select></div>
+    <div><label for="place">Meeting point</label><select id="place">${d.places.map(p=>'<option>'+esc(p)+'</option>').join('')}</select></div>
+   </div>
+   <div class="row">
+    <div><label for="date">${d.academy?'Start date':'Date'}</label><input type="date" id="date"></div>
+    <div id="durwrap"><label for="dur">Duration</label><select id="dur"><option value="2">2 hours</option><option value="3" selected>3 hours</option><option value="4">4 hours</option></select></div>
+   </div>
+   <div class="row">
+    <div><label for="people">People</label><select id="people"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option></select></div>
+    <div><label for="lang">Language</label><select id="lang"><option>English</option><option>German</option><option>French</option><option>Italian</option><option>Spanish</option><option>Dutch</option></select></div>
+   </div>
+   <label for="ins">${d.team.length>1?'Instructor (returning guests often ask for the same one)':'Your instructor'}</label>
+   <select id="ins" style="margin-bottom:14px">${(d.team.length>1?team:d.team).map(t=>'<option>'+esc(t)+'</option>').join('')}</select>
+   ${addon?'<label style="display:flex;gap:8px;align-items:center;margin-bottom:14px;color:var(--ink);font-weight:500"><input type="checkbox" id="addon"> '+esc(addon.label)+' · +CHF '+addon.rate+' per person</label>':''}
+   <div id="slotwrap"><label id="slotlbl">Start time · <span id="slotday"></span></label><div class="chips" id="slots" role="group" aria-labelledby="slotlbl"></div></div>
+   <div class="sum"><div><div class="small" id="sumtxt"></div><div class="price" id="price"></div><div class="small" id="pnote"></div></div>
+   <button class="btn" id="go" type="button">${d.academy?'Send application':'Pay deposit &amp; book'}</button></div>
+  </div>
+  <div class="done" id="done" aria-live="polite">
+   <h3>Done. Here's what the guest receives, automatically.</h3>
+   <div class="wa" id="wa1"></div><div class="wa" id="wa2"></div><div class="wa" id="wa3"></div>
+   <p style="margin-top:14px"><button class="btn ghost" id="again" type="button">Try again</button></p>
+  </div>
+ </div>
+ <aside class="card">
+  <h2>What your team sees</h2>
+  <p class="small" style="margin:6px 0 0">One pipeline for every booking, from the website, WhatsApp or a phone call. Example data.</p>
+  <div class="pipe">
+   ${(d.academy?[['live','New application','4'],['live','Intro call booked','2'],['ok','Deposit paid','6'],['ok','Course pack sent','6'],['','Testimonial request after the course','3'],['','Next level offered in spring','18']]:[['live','New enquiry on WhatsApp','3'],['live','Deposit link sent','2'],['ok','Booked for tomorrow','7'],['ok','Reminder sent the evening before','7'],['','Review request after the lesson','5'],['','"Same instructor next season?" in October','41']]).map(s=>'<div class="stage '+s[0]+'"><span class="dot"></span><span>'+s[1]+'</span><span class="count">'+s[2]+'</span></div>').join('')}
+  </div>
+  <p class="small" style="margin-top:14px">Runs on WhatsApp, the channel your guests already use. Nobody types the meeting point twenty times a day.</p>
+ </aside>
+</div>
+<section>
+ <h2>Where ${esc(d.me)} stands in ${esc(d.resort)}</h2>
+ ${comp.length?`<p class="lede">Google ratings and review counts for schools we checked on 22–23 November 2026.</p>
+ <div class="card" style="margin-top:14px;padding:6px 8px;overflow-x:auto"><table><thead><tr><th>School</th><th>Rating</th><th>Reviews</th><th style="width:30%"></th></tr></thead><tbody>
+ ${comp.map(c=>'<tr class="'+(c[0]===d.me?'me':'')+'"><td>'+esc(c[0])+'</td><td class="n">'+c[1].toFixed(1)+'</td><td class="n">'+c[2]+'</td><td><div class="bar"><i style="width:'+Math.max(2,Math.round(c[2]/maxN*100))+'%"></i></div></td></tr>').join('')}
+ </tbody></table></div>`:''}
+ <div class="cols3" style="margin-top:18px">${d.cards.map(c=>'<div class="card insight"><div class="k">'+esc(c[0])+'</div><h3>'+esc(c[1])+'</h3><p class="small">'+esc(c[2])+'</p></div>').join('')}</div>
+</section>
+<section style="padding-top:0"><div class="card" style="display:flex;gap:20px;justify-content:space-between;align-items:center;flex-wrap:wrap">
+ <div style="max-width:60ch"><h2>If this is useful, it's yours to keep</h2><p class="small" style="margin:6px 0 0">We can put this live on your domain and WhatsApp with your real calendar, prices and ${d.team.length>1?'instructors':'availability'}. No pressure either way.</p></div>
+ <div class="small">Aryadev Chatterjee · Codzo<br>WhatsApp +91 86378 59578</div></div></section>
+</main>
+<footer class="wrap">Concept demo by Codzo. ${esc(d.name)}'s name and public Google listing are used only to show how the flow would look for you.</footer>`;
+
+const $=id=>document.getElementById(id);
+const TIMES=['08:30','09:00','09:30','10:00','10:30','11:00','11:30','12:30','13:00','13:30','14:00'];
+const t=new Date();t.setDate(t.getDate()+(d.academy?30:1));
+const iso=x=>x.toISOString().slice(0,10);$('date').value=iso(t);$('date').min=iso(new Date());
+let slot=null;
+const L=()=>lessons[+$('lesson').value];
+function seed(s){let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h}
+function fmtDay(v){return new Date(v+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})}
+function mark(n){for(let i=1;i<=4;i++)$('s'+i).classList.toggle('on',i<=n)}
+function drawSlots(){
+ const l=L();$('slotwrap').style.display=(l.unit==='h')?'':'none';$('durwrap').style.visibility=(l.unit==='h')?'visible':'hidden';
+ $('slotday').textContent=fmtDay($('date').value);const s=seed($('date').value+d.slug+$('place').value);
+ const box=$('slots');box.innerHTML='';slot=l.unit==='h'?null:(l.unit==='half'?'08:30':'08:30');
+ if(l.unit!=='h'){price();return}
+ TIMES.forEach((tm,i)=>{const b=document.createElement('button');b.type='button';b.className='chip';b.textContent=tm;b.setAttribute('aria-pressed','false');
+  if(((s>>i)&7)===0||((s>>(i+3))&7)===1){b.disabled=true;b.title='Booked'}
+  b.onclick=()=>{box.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');slot=tm;mark(2);price()};box.appendChild(b)});
+ const f=box.querySelector('.chip:not(:disabled)');if(f)f.click();
+}
+function total(){const l=L();let v=l.unit==='h'?l.rate*+$('dur').value:l.rate;if(addon&&$('addon')&&$('addon').checked)v+=addon.rate*+$('people').value;return v}
+function durTxt(){const l=L();return l.unit==='h'?$('dur').value+' hours':l.unit==='day'?'full day':l.unit==='half'?'half day':'course'}
+function price(){const l=L();
+ if(l.unit==='course'){$('price').textContent='Apply';$('pnote').textContent='Price and dates confirmed on a short intro call';}
+ else{$('price').textContent='CHF '+total();$('pnote').textContent='Example price · same for the whole group · 30% deposit now';}
+ $('sumtxt').textContent=l.label+' · '+durTxt()+' · '+$('people').value+(+$('people').value>1?' people':' person')+(slot&&l.unit==='h'?' · '+slot:'');}
+['date','place','lesson'].forEach(id=>$(id).addEventListener('change',()=>{drawSlots();price()}));
+['dur','people','lang','ins'].forEach(id=>$(id).addEventListener('change',price));
+if($('addon'))$('addon').addEventListener('change',price);
+$('go').onclick=()=>{const l=L();if(l.unit==='h'&&!slot){$('sumtxt').textContent='Pick a start time first.';return}
+ mark(4);const tot=total(),dep=Math.round(tot*.3),day=fmtDay($('date').value);
+ const who=$('ins').value==='No preference'?'your instructor':$('ins').value;
+ if(d.academy){
+  $('wa1').innerHTML='<b>WhatsApp · right after applying</b>Thanks for applying to '+d.name+'! 🎿\n'+l.label+', starting '+day+'.\nPick a time for a 15-minute intro call with '+who+': [calendar link]';
+  $('wa2').innerHTML='<b>WhatsApp · after the call</b>Great speaking today! Here is your course pack and the deposit link to secure your place: [link]';
+  $('wa3').innerHTML='<b>WhatsApp · after the course</b>Congratulations on finishing! Would you write a few lines about your experience? It helps the next trainees decide: [review link]';
+ }else{
+  $('wa1').innerHTML='<b>WhatsApp · right after booking</b>You\'re booked with '+d.name+'! 🎿\n'+l.label+'\n'+day+(l.unit==='h'?', '+slot:'')+' · '+durTxt()+' · '+$('people').value+(+$('people').value>1?' people':' person')+' · '+$('lang').value+'\nDeposit received: CHF '+dep+'. Remaining CHF '+(tot-dep)+' on the day.';
+  $('wa2').innerHTML='<b>WhatsApp · evening before, 18:00</b>See you tomorrow'+(l.unit==='h'?' at '+slot:'')+'! Meet '+who+' at '+$('place').value+'.\nBring your ski pass. Weather looks good ☀️';
+  $('wa3').innerHTML='<b>WhatsApp · 2 hours after the lesson</b>Thanks for skiing with us today! If you enjoyed it, a Google review helps other guests find us: [review link]';
+ }
+ $('form').style.display='none';$('done').classList.add('show')};
+$('again').onclick=()=>{$('done').classList.remove('show');$('form').style.display='';mark(1);drawSlots();price()};
+drawSlots();price();mark(1);
+})();
+</script>
+</body>
+</html>
